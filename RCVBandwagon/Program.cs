@@ -16,7 +16,7 @@ namespace RCVBandwagon
 
         static Random Randomizer = new Random(0);
 
-        static int numRepetitions = 1000;
+        static int numRepetitions = 25_000;
         static bool reportEach = false;
         static int numCandidates = 10;
         static int numDimensions = 2; 
@@ -27,7 +27,7 @@ namespace RCVBandwagon
         static bool eachDimensionEqualWeight = true;
         static double maxProportionRemainingWeight = 0.5; // if not equal weight for each dimension, this determines the maximum proportion of the unallocated weight should be assigned to each dimension (other than the last, which receives the remaining weight) -- this approach means that there will usually be some dimensions with greater weight than others
         static double distancePower = 1.0; // exponent for measuring distance
-        static double polarizationWeight = 0.5; // greater weight pushes voters preferred attributes more toward extremes
+        static double polarizationWeight = 0.0; // greater weight pushes voters preferred attributes more toward extremes
         static bool doBandwagon = true;
         static int numCandidatesInBandwagon = 2;
         static double bandwagonProportion => doBandwagon ? 0.5 : 0; // proportion of voters with bandwagon effect
