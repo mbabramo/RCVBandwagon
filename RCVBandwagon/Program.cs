@@ -63,6 +63,7 @@ namespace RCVBandwagon
                 double revealedCondorcetWinnerExists = 0;
                 double rankedChoiceWinnerIsTrue = 0;
                 double rankedChoiceWinnerIsRevealed = 0;
+                double revealedCondorcetWinnerIsTrue = 0;
                 for (int r = 0; r < numRepetitions; r++)
                 {
                     var result = ExecuteOnce();
@@ -74,13 +75,16 @@ namespace RCVBandwagon
                         rankedChoiceWinnerIsTrue++;
                     if (result.rankedChoiceWinnerIsRevealed)
                         rankedChoiceWinnerIsRevealed++;
+                    if (result.revealedCondorcetWinnerIsTrue)
+                        revealedCondorcetWinnerIsTrue++;
+                    
                 }
                 //Console.WriteLine($"Bandwagon effect {bandwagonEffectValue} True Condorcet winner {trueCondorcetWinnerExists / (double)numRepetitions} Revealed Condorcet winner {revealedCondorcetWinnerExists / (double)numRepetitions} Ranked choice is true {rankedChoiceWinnerIsTrue / trueCondorcetWinnerExists} Ranked choice is revealed {rankedChoiceWinnerIsRevealed / revealedCondorcetWinnerExists }");
-                Console.WriteLine($"{bandwagonEffectValue: 0.00}, {trueCondorcetWinnerExists / (double)numRepetitions: 0.00}, {revealedCondorcetWinnerExists / (double)numRepetitions : 0.00}, {rankedChoiceWinnerIsTrue / trueCondorcetWinnerExists: 0.00}, {rankedChoiceWinnerIsRevealed / revealedCondorcetWinnerExists: 0.00}");
+                Console.WriteLine($"{bandwagonEffectValue: 0.00}, {trueCondorcetWinnerExists / (double)numRepetitions: 0.00}, {revealedCondorcetWinnerExists / (double)numRepetitions : 0.00}, {rankedChoiceWinnerIsTrue / trueCondorcetWinnerExists: 0.00}, {rankedChoiceWinnerIsRevealed / revealedCondorcetWinnerExists: 0.00}, {revealedCondorcetWinnerIsTrue / trueCondorcetWinnerExists: 0.00}");
             }
         }
 
-        public (bool trueCondorcetWinnerExists, bool revealedCondorcetWinnerExists, bool rankedChoiceWinnerIsTrue, bool rankedChoiceWinnerIsRevealed) ExecuteOnce()
+        public (bool trueCondorcetWinnerExists, bool revealedCondorcetWinnerExists, bool rankedChoiceWinnerIsTrue, bool rankedChoiceWinnerIsRevealed, bool revealedCondorcetWinnerIsTrue) ExecuteOnce()
         {
             Setup();
             bool originalDoBandwagon = doBandwagon;
@@ -96,6 +100,7 @@ namespace RCVBandwagon
             bool revealedCondorcetWinnerExists = revealedCondorcetWinner != null;
             bool rankedChoiceWinnerIsTrue = trueCondorcetWinnerExists && rankedChoiceWinner == trueCondorcetWinner;
             bool rankedChoiceWinnerIsRevealed = revealedCondorcetWinnerExists && rankedChoiceWinner == revealedCondorcetWinner;
+            bool revealedCondorcetWinnerIsTrue = trueCondorcetWinnerExists && trueCondorcetWinnerExists == revealedCondorcetWinnerExists;
 
             if (reportEach)
             {
@@ -103,7 +108,7 @@ namespace RCVBandwagon
                 Console.WriteLine($"Ranked choice result: {Candidates[(int)rankedChoiceWinner].Attributes[0]} True condorcet {trueCondorcetWinnerExists} revealed condorcet {revealedCondorcetWinnerExists} rankedChoiceIsTrue {rankedChoiceWinnerIsTrue} rankedChoiceIsRevealed {rankedChoiceWinnerIsRevealed}");
             }
 
-            return (trueCondorcetWinnerExists, revealedCondorcetWinnerExists, rankedChoiceWinnerIsTrue, rankedChoiceWinnerIsRevealed);
+            return (trueCondorcetWinnerExists, revealedCondorcetWinnerExists, rankedChoiceWinnerIsTrue, rankedChoiceWinnerIsRevealed, revealedCondorcetWinnerIsTrue);
         }
 
         public void Setup()
