@@ -59,56 +59,56 @@ namespace RCVBandwagon
             for (double bandwagonEffectValue = 0; bandwagonEffectValue < 5.0; bandwagonEffectValue += 0.5)
             {
                 bandwagonEffect = bandwagonEffectValue;
-                double trueCondorcetWinnerExists = 0;
+                double latentCondorcetWinnerExists = 0;
                 double revealedCondorcetWinnerExists = 0;
-                double rankedChoiceWinnerIsTrue = 0;
+                double rankedChoiceWinnerIsLatent = 0;
                 double rankedChoiceWinnerIsRevealed = 0;
-                double revealedCondorcetWinnerIsTrue = 0;
+                double revealedCondorcetWinnerIsLatent = 0;
                 for (int r = 0; r < numRepetitions; r++)
                 {
                     var result = ExecuteOnce();
-                    if (result.trueCondorcetWinnerExists)
-                        trueCondorcetWinnerExists++;
+                    if (result.latentCondorcetWinnerExists)
+                        latentCondorcetWinnerExists++;
                     if (result.revealedCondorcetWinnerExists)
                         revealedCondorcetWinnerExists++;
-                    if (result.rankedChoiceWinnerIsTrue)
-                        rankedChoiceWinnerIsTrue++;
+                    if (result.rankedChoiceWinnerIsLatent)
+                        rankedChoiceWinnerIsLatent++;
                     if (result.rankedChoiceWinnerIsRevealed)
                         rankedChoiceWinnerIsRevealed++;
-                    if (result.revealedCondorcetWinnerIsTrue)
-                        revealedCondorcetWinnerIsTrue++;
+                    if (result.revealedCondorcetWinnerIsLatent)
+                        revealedCondorcetWinnerIsLatent++;
                     
                 }
-                //Console.WriteLine($"Bandwagon effect {bandwagonEffectValue} True Condorcet winner {trueCondorcetWinnerExists / (double)numRepetitions} Revealed Condorcet winner {revealedCondorcetWinnerExists / (double)numRepetitions} Ranked choice is true {rankedChoiceWinnerIsTrue / trueCondorcetWinnerExists} Ranked choice is revealed {rankedChoiceWinnerIsRevealed / revealedCondorcetWinnerExists }");
-                Console.WriteLine($"{bandwagonEffectValue: 0.00}, {trueCondorcetWinnerExists / (double)numRepetitions: 0.00}, {revealedCondorcetWinnerExists / (double)numRepetitions : 0.00}, {rankedChoiceWinnerIsTrue / trueCondorcetWinnerExists: 0.00}, {rankedChoiceWinnerIsRevealed / revealedCondorcetWinnerExists: 0.00}, {revealedCondorcetWinnerIsTrue / trueCondorcetWinnerExists: 0.00}");
+                //Console.WriteLine($"Bandwagon effect {bandwagonEffectValue} Latent Condorcet winner {latentCondorcetWinnerExists / (double)numRepetitions} Revealed Condorcet winner {revealedCondorcetWinnerExists / (double)numRepetitions} Ranked choice is latent winner {rankedChoiceWinnerIsLatent / latentCondorcetWinnerExists} Ranked choice is revealed winner {rankedChoiceWinnerIsRevealed / revealedCondorcetWinnerExists } Condorcet method is latent winner {revealedCondorcetWinnerIsLatent / latentCondorcetWinnerExists}");
+                Console.WriteLine($"{bandwagonEffectValue: 0.00}, {latentCondorcetWinnerExists / (double)numRepetitions: 0.00}, {revealedCondorcetWinnerExists / (double)numRepetitions : 0.00}, {rankedChoiceWinnerIsLatent / latentCondorcetWinnerExists: 0.00}, {rankedChoiceWinnerIsRevealed / revealedCondorcetWinnerExists: 0.00}, {revealedCondorcetWinnerIsLatent / latentCondorcetWinnerExists: 0.00}");
             }
         }
 
-        public (bool trueCondorcetWinnerExists, bool revealedCondorcetWinnerExists, bool rankedChoiceWinnerIsTrue, bool rankedChoiceWinnerIsRevealed, bool revealedCondorcetWinnerIsTrue) ExecuteOnce()
+        public (bool latentCondorcetWinnerExists, bool revealedCondorcetWinnerExists, bool rankedChoiceWinnerIsLatent, bool rankedChoiceWinnerIsRevealed, bool revealedCondorcetWinnerIsLatent) ExecuteOnce()
         {
             Setup();
             bool originalDoBandwagon = doBandwagon;
             doBandwagon = false;
             DoAssessments();
-            int? trueCondorcetWinner = CondorcetWinner();
+            int? latentCondorcetWinner = CondorcetWinner();
             doBandwagon = originalDoBandwagon;
             DoAssessments();
             int? revealedCondorcetWinner = CondorcetWinner();
             int rankedChoiceWinner = RankedChoiceWinner();
 
-            bool trueCondorcetWinnerExists = trueCondorcetWinner != null;
+            bool latentCondorcetWinnerExists = latentCondorcetWinner != null;
             bool revealedCondorcetWinnerExists = revealedCondorcetWinner != null;
-            bool rankedChoiceWinnerIsTrue = trueCondorcetWinnerExists && rankedChoiceWinner == trueCondorcetWinner;
+            bool rankedChoiceWinnerIsLatent = latentCondorcetWinnerExists && rankedChoiceWinner == latentCondorcetWinner;
             bool rankedChoiceWinnerIsRevealed = revealedCondorcetWinnerExists && rankedChoiceWinner == revealedCondorcetWinner;
-            bool revealedCondorcetWinnerIsTrue = trueCondorcetWinnerExists && trueCondorcetWinnerExists == revealedCondorcetWinnerExists;
+            bool revealedCondorcetWinnerIsLatent = latentCondorcetWinnerExists && latentCondorcetWinner == revealedCondorcetWinner;
 
             if (reportEach)
             {
                 Console.WriteLine(GetCandidateAttributes(0));
-                Console.WriteLine($"Ranked choice result: {Candidates[(int)rankedChoiceWinner].Attributes[0]} True condorcet {trueCondorcetWinnerExists} revealed condorcet {revealedCondorcetWinnerExists} rankedChoiceIsTrue {rankedChoiceWinnerIsTrue} rankedChoiceIsRevealed {rankedChoiceWinnerIsRevealed}");
+                Console.WriteLine($"Ranked choice result: {Candidates[(int)rankedChoiceWinner].Attributes[0]} True condorcet {latentCondorcetWinnerExists} revealed condorcet {revealedCondorcetWinnerExists} rankedChoiceIsLatent {rankedChoiceWinnerIsLatent} rankedChoiceIsRevealed {rankedChoiceWinnerIsRevealed}");
             }
 
-            return (trueCondorcetWinnerExists, revealedCondorcetWinnerExists, rankedChoiceWinnerIsTrue, rankedChoiceWinnerIsRevealed, revealedCondorcetWinnerIsTrue);
+            return (latentCondorcetWinnerExists, revealedCondorcetWinnerExists, rankedChoiceWinnerIsLatent, rankedChoiceWinnerIsRevealed, revealedCondorcetWinnerIsLatent);
         }
 
         public void Setup()
